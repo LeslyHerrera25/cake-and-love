@@ -1,0 +1,98 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Playfair+Display:ital,wght@0,700;1,700&family=Quicksand:wght@600&display=swap" rel="stylesheet">
+
+<style>
+    .hero-cake {
+        width: 100%;
+        height: calc(100vh - 65px);
+        /* Fondo con un filtro sutil para que el blanco resalte pero la imagen sea protagonista */
+        background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
+                    url('https://images.unsplash.com/photo-1559620192-032c4bc4674e') no-repeat center center;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        border-bottom: 8px solid #f4d1d1; 
+    }
+
+    
+    .hero-cake::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 15px;
+        background-image: radial-gradient(circle at 10px 15px, #f4d1d1 12px, transparent 13px);
+        background-size: 20px 20px;
+    }
+
+    
+    .border-vintage {
+        position: absolute;
+        top: 25px;
+        bottom: 25px;
+        left: 25px;
+        right: 25px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-radius: 15px;
+        pointer-events: none;
+    }
+
+    
+    .hero-cake h1 {
+        font-family: 'Sacramento', cursive;
+        font-size: clamp(80px, 15vw, 150px);
+        color: #ffffff;
+        margin: 0;
+        text-shadow: 3px 3px 15px rgba(0,0,0,0.3); 
+        z-index: 2;
+    }
+
+    
+    .hero-cake p {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        font-size: clamp(20px, 4vw, 32px);
+        color: #ffffff;
+        margin-top: -10px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+        letter-spacing: 1px;
+        z-index: 2;
+    }
+
+    
+    .btn-pasteleria {
+        margin-top: 40px;
+        padding: 15px 50px;
+        background-color: #f4d1d1; 
+        color: white !important;
+        text-decoration: none;
+        border-radius: 50px;
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        text-transform: uppercase;
+        border: 3px solid #ffffff;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transition: all 0.4s ease;
+        z-index: 2;
+    }
+
+    .btn-pasteleria:hover {
+        transform: translateY(-5px);
+        background-color: #ffffff;
+        color: #f4d1d1 !important;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    }
+</style>
+
+<div class="hero-cake">
+    <div class="border-vintage"></div> <h1>Cake & Love</h1>
+    <p>"Endulzamos tus momentos especiales"</p>
+    <a href="{% url 'catalogo' %}" class="btn-pasteleria">Catálogo</a>
+</div>
+{% endblock %}

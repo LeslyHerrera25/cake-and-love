@@ -1,0 +1,58 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<h2 style="color: #d81b60; text-align: center;">🎀 Control de Órdenes de Producción 🎀</h2>
+<p style="text-align: center; color: #888;">Utiliza este panel para actualizar el avance de los pedidos en MariaDB.</p>
+<hr style="border: 0; border-top: 2px solid var(--rosa-claro); margin: 20px 0;">
+
+<table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+    <thead>
+        <tr style="text-align: left; color: #d81b60;">
+            <th style="padding: 15px;">Cliente</th>
+            <th style="padding: 15px;">Pedido</th>
+            <th style="padding: 15px;">Fecha Entrega</th>
+            <th style="padding: 15px;">Estado</th>
+            <th style="padding: 15px;">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pedido in pedidos %}
+        <tr style="background-color: var(--crema); box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <td style="padding: 15px; border-radius: 15px 0 0 15px; font-weight: bold;">
+                👤 {{ pedido.usuario.username }}
+            </td>
+            <td style="padding: 15px;">
+                <b>{{ pedido.nombre }}</b><br>
+                <small style="color: #999;">"{{ pedido.mensaje }}"</small>
+            </td>
+            <td style="padding: 15px; color: #777;">📅 {{ pedido.fecha }}</td>
+            <td style="padding: 15px;">
+                <span class="badge-estado">{{ pedido.estado }}</span>
+            </td>
+           <td style="padding: 15px; border-radius: 0 15px 15px 0;">
+    <form method="POST" action="{% url 'actualizar_estado' pedido.id %}">
+    {% csrf_token %}
+    
+    <select name="nuevo_estado" style="padding: 5px; border-radius: 8px;">
+        <option value="Pendiente">Pendiente</option>
+        <option value="En proceso">En proceso</option>
+        <option value="Listo">Listo</option>
+        <option value="Entregado">Entregado</option>
+    </select>
+
+    <button type="submit" style="margin-top: 5px; background-color: #d81b60; color: white; border: none; padding: 5px 10px; border-radius: 8px;">
+        Actualizar
+    </button>
+</form>
+</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="padding: 40px; text-align: center; color: #bbb;">
+                <p style="font-size: 1.2em;">No hay pedidos pendientes en el horno. 🧁</p>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+
+<h2 style="text-align:center; color: var(--rosa-fuerte);">💳 Pago</h2>
+
+<p style="text-align:center;">Total a pagar: <b>${{ total }}</b></p>
+
+<form method="POST" style="text-align:center;">
+    {% csrf_token %}
+
+    <input type="text" placeholder="Número de tarjeta" required><br><br>
+    <input type="text" placeholder="Nombre del titular" required><br><br>
+    <input type="text" placeholder="CVV" required><br><br>
+
+    <button type="submit" style="
+        background: green;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 10px;
+    ">
+        Pagar ahora 💳
+    </button>
+</form>
+
+{% endblock %}

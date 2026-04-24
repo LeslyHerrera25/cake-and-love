@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cake & Love | Pastelería Artesanal</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Playfair+Display:ital,wght@0,700;1,700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --rosa-vintage: #f4d1d1; 
+            --rosa-fuerte: #d63384;
+            --crema-calido: #fff8f0; 
+            --cafe-chocolate: #5d4037;
+            --blanco-hueso: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--crema-calido);
+            color: var(--cafe-chocolate);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        
+        header {
+            background-color: var(--rosa-vintage); 
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid var(--blanco-hueso); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background-image: radial-gradient(circle at 10px 0, var(--blanco-hueso) 12px, transparent 13px);
+            background-size: 20px 20px;
+        }
+
+        .logo-text {
+            font-family: 'Sacramento', cursive;
+            font-size: 42px;
+            color: var(--blanco-hueso); 
+            margin: 0;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav a {
+            text-decoration: none;
+            color: var(--cafe-chocolate);
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 15px;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--blanco-hueso);
+        }
+
+        .user-badge {
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--cafe-chocolate);
+            border: 1px solid var(--blanco-hueso);
+        }
+
+        .btn-salir {
+            background-color: var(--cafe-chocolate);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            margin-left: 10px;
+            transition: transform 0.2s;
+        }
+
+        .btn-salir:hover {
+            transform: scale(1.05);
+            background-color: var(--rosa-fuerte);
+        }
+
+        /* --- CONTENIDO --- */
+        .contenido {
+            flex: 1;
+        }
+
+        /* --- ALERTAS --- */
+        .alert-message {
+            background-color: var(--blanco-hueso);
+            color: var(--rosa-fuerte);
+            padding: 15px 30px;
+            margin: 20px auto;
+            width: fit-content;
+            border-radius: 50px;
+            border: 2px dashed var(--rosa-vintage);
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        /* --- FOOTER CON PERSONALIZADO --- */
+        footer {
+            background-color: var(--rosa-vintage);
+            color: var(--cafe-chocolate);
+            text-align: center;
+            padding: 40px 15px;
+            border-top: 5px solid var(--blanco-hueso);
+            position: relative;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a href="{% url 'inicio' %}" style="text-decoration: none;">
+        <h1 class="logo-text">Cake & Love</h1>
+    </a>
+
+    <nav>
+        {% if user.is_authenticated %}
+            <a href="{% url 'inicio' %}">Inicio</a>
+
+            {% if user.groups.all.0.name == 'cliente' %}
+                <a href="{% url 'catalogo' %}">Catálogo</a>
+                <a href="{% url 'carrito' %}">Carrito 🛒</a>
+            {% endif %}
+
+            {% if user.groups.all.0.name == 'empleado' %}
+                <a href="{% url 'pedidos' %}">Pedidos</a>
+            {% endif %}
+
+            {% if user.groups.all.0.name == 'administrador' %}
+                <a href="{% url 'reportes' %}">Reportes</a>
+            {% endif %}
+
+            <span class="user-badge">🌸 {{ user.username }}</span>
+
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-salir">Salir</button>
+            </form>
+
+        {% else %}
+            <a href="{% url 'login' %}">Ingresar</a>
+        {% endif %}
+    </nav>
+</header>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert-message">
+            ✨ {{ message }} ✨
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="contenido">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer>
+    <p>Cake & Love — Hecho con amor y azúcar</p>
+    <div style="font-size: 12px; margin-top: 10px; letter-spacing: 2px;">© 2026 SISTEMA DE GESTIÓN</div>
+</footer>
+
+</body>
+</html>

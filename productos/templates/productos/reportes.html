@@ -1,0 +1,204 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    .reportes-wrapper {
+        padding: 40px 20px;
+        background-color: #fcf8f2;
+        min-height: 100vh;
+    }
+
+    .header-reportes {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .header-reportes h1 {
+        font-family: 'Sacramento', cursive;
+        font-size: 70px;
+        color: #d63384;
+        margin: 0;
+    }
+
+    .header-reportes p {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        color: #8d6e63;
+        font-size: 18px;
+    }
+
+    /* Contenedor de Tarjetas de Ventas */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 25px;
+        max-width: 1200px;
+        margin: 0 auto 50px auto;
+    }
+
+    .card-reporte {
+        background: white;
+        padding: 30px 20px;
+        border-radius: 25px;
+        border: 2px double #f4d1d1;
+        text-align: center;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+        transition: transform 0.3s ease;
+    }
+
+    .card-reporte:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-reporte h2 {
+        font-family: 'Quicksand', sans-serif;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #8d6e63;
+        margin-bottom: 15px;
+    }
+
+    .card-reporte .monto {
+        font-family: 'Playfair Display', serif;
+        font-size: 42px;
+        font-weight: 700;
+        color: #d63384;
+        display: block;
+    }
+
+    /* Sección de Estados de Pedidos */
+    .seccion-estados {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 30px;
+        border: 1px solid #f4d1d1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .grafica-contenedor {
+        flex: 1;
+        min-width: 300px;
+        max-width: 400px;
+    }
+
+    .leyenda-estados {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .item-estado {
+        padding: 15px;
+        border-radius: 15px;
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 700;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    /* Colores por estado */
+    .pendiente { background-color: #f8f9fa; border: 1px solid #dee2e6; color: #6c757d; }
+    .proceso { background-color: #fff4e5; border: 1px solid #ffe0b2; color: #ef6c00; }
+    .listo { background-color: #e8f5e9; border: 1px solid #c8e6c9; color: #2e7d32; }
+    .entregado { background-color: #e3f2fd; border: 1px solid #bbdefb; color: #1565c0; }
+
+    .numero-estado {
+        display: block;
+        font-size: 24px;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="reportes-wrapper">
+    <div class="header-reportes">
+        <h1>Dashboard Administrativo</h1>
+        <p>Resumen de actividad y desempeño de Cake & Love</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card-reporte">
+            <h2>Pedidos Totales</h2>
+            <span class="monto">{{ total_pedidos }}</span>
+        </div>
+        <div class="card-reporte">
+            <h2>Ventas Totales</h2>
+            <span class="monto">${{ total_ventas }}</span>
+        </div>
+        <div class="card-reporte">
+            <h2>Ventas Semanales</h2>
+            <span class="monto">${{ total_semanal }}</span>
+        </div>
+        <div class="card-reporte">
+            <h2>Ventas Mensuales</h2>
+            <span class="monto">${{ total_mensual }}</span>
+        </div>
+    </div>
+
+    <div class="header-reportes" style="margin-bottom: 30px;">
+        <h2 style="font-family: 'Playfair Display'; color: #5d4037;">Estado de los Pedidos</h2>
+    </div>
+
+    <div class="seccion-estados">
+        <div class="grafica-contenedor">
+            <canvas id="chartEstados"></canvas>
+        </div>
+
+        <div class="leyenda-estados">
+            <div class="item-estado pendiente">
+                Pendientes
+                <span class="numero-estado">{{ pendientes }}</span>
+            </div>
+            <div class="item-estado proceso">
+                En Proceso
+                <span class="numero-estado">{{ en_proceso }}</span>
+            </div>
+            <div class="item-estado listo">
+                Listos
+                <span class="numero-estado">{{ listos }}</span>
+            </div>
+            <div class="item-estado entregado">
+                Entregados
+                <span class="numero-estado">{{ entregados }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('chartEstados').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pendientes', 'En Proceso', 'Listos', 'Entregados'],
+            datasets: [{
+                data: [{{ pendientes }}, {{ en_proceso }}, {{ listos }}, {{ entregados }}],
+                backgroundColor: [
+                    '#e9ecef', // Gris suave
+                    '#ffe0b2', // Naranja suave
+                    '#c8e6c9', // Verde suave
+                    '#bbdefb'  // Azul suave
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            cutout: '70%' // Hace que la dona se vea más elegante
+        }
+    });
+</script>
+
+{% endblock %}

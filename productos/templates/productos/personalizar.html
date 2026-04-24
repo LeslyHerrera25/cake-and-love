@@ -1,0 +1,162 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Playfair+Display:ital,wght@0,700;1,700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+    .personalizar-container {
+        padding: 60px 20px;
+        background-color: #fcf8f2;
+        min-height: 100vh;
+    }
+
+    .titulo-seccion {
+        font-family: 'Sacramento', cursive;
+        font-size: clamp(50px, 8vw, 80px);
+        color: #d63384;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .subtitulo-seccion {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        text-align: center;
+        color: #8d6e63;
+        font-size: 20px;
+        margin-bottom: 40px;
+    }
+
+    
+    .card-formulario {
+        background: #ffffff;
+        padding: 40px;
+        max-width: 550px;
+        margin: 0 auto;
+        border-radius: 30px;
+        border: 2px double #f4d1d1;
+        box-shadow: 0 15px 35px rgba(244, 209, 209, 0.3);
+        position: relative;
+    }
+
+    
+    .card-formulario::before {
+        content: '❦';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #f4d1d1;
+        font-size: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    label {
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 700;
+        color: #5d4037;
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
+
+    
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #fff5f5;
+        border-radius: 12px;
+        background-color: #fffafb;
+        font-family: 'Quicksand', sans-serif;
+        color: #5d4037;
+        outline: none;
+        transition: all 0.3s ease;
+        box-sizing: border-box; /* Asegura que el padding no rompa el ancho */
+    }
+
+    input:focus {
+        border-color: #f4d1d1;
+        background-color: #ffffff;
+        box-shadow: 0 0 8px rgba(244, 209, 209, 0.4);
+    }
+
+    
+    .btn-submit-cake {
+        background-color: #d63384;
+        color: white !important;
+        padding: 15px;
+        border: 3px solid #ffffff;
+        border-radius: 50px;
+        width: 100%;
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(214, 51, 132, 0.3);
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .btn-submit-cake:hover {
+        background-color: #5d4037;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    
+    input[type="date"] {
+        cursor: pointer;
+    }
+</style>
+
+<div class="personalizar-container">
+    <h2 class="titulo-seccion">🎂 Personaliza tu Pastel</h2>
+    <p class="subtitulo-seccion">Hazlo único para tu ocasión especial ✨</p>
+    
+    <div class="card-formulario">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>✨ Mensaje en el pastel:</label>
+                <input type="text" name="mensaje" placeholder="Ej: ¡Feliz Cumpleaños!" required>
+            </div>
+
+            <div class="form-group">
+                <label>👥 Número de personas:</label>
+                <input type="number" name="personas" min="1" placeholder="¿Cuántos invitados son?" required>
+            </div>
+
+            <div class="form-group">
+                <label>📅 Fecha de entrega:</label>
+                <input type="date" name="fecha" id="fecha" required>
+            </div>
+
+            <button type="submit" class="btn-submit-cake">
+                Agregar al carrito 🛒
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 4 días de anticipación
+    const hoy = new Date();
+    hoy.setDate(hoy.getDate() + 4);
+
+    const year = hoy.getFullYear();
+    const month = String(hoy.getMonth() + 1).padStart(2, '0');
+    const day = String(hoy.getDate()).padStart(2, '0');
+
+    const minFecha = `${year}-${month}-${day}`;
+    document.getElementById("fecha").min = minFecha;
+</script>
+
+{% endblock %}

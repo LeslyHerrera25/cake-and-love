@@ -1,0 +1,62 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+
+<h2 style="color: var(--rosa-fuerte); text-align: center;">📦 Mis Pedidos</h2>
+<p style="text-align:center; color:#888;">Aquí puedes ver el estado de tus pedidos 💕</p>
+<hr style="border-top: 2px solid var(--rosa-claro);">
+
+<table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+    <thead>
+        <tr style="text-align: left; color: var(--rosa-fuerte);">
+            <th style="padding: 15px;">Producto</th>
+            <th style="padding: 15px;">Mensaje</th>
+            <th style="padding: 15px;">Fecha</th>
+            <th style="padding: 15px;">Estado</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for pedido in pedidos %}
+        <tr style="background-color: var(--crema); box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <td style="padding: 15px; font-weight: bold;">
+                {{ pedido.nombre }}
+            </td>
+            <td style="padding: 15px;">
+                "{{ pedido.mensaje }}"
+            </td>
+            <td style="padding: 15px;">
+                {{ pedido.fecha }}
+            </td>
+            <td style="padding: 15px;">
+                <span 
+                    style="
+                    padding: 5px 10px;
+                    border-radius: 10px;
+                    color: white;
+                    {% if pedido.estado == 'Pendiente' %}
+                        background-color: gray;
+                    {% elif pedido.estado == 'En proceso' %}
+                        background-color: orange;
+                    {% elif pedido.estado == 'Listo' %}
+                        background-color: green;
+                    {% elif pedido.estado == 'Entregado' %}
+                        background-color: black;
+                    {% endif %}
+                    "
+                >
+                    {{ pedido.estado }}
+                </span>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="padding: 40px; text-align: center;">
+                No tienes pedidos aún 🧁
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
