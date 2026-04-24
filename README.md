@@ -15,11 +15,6 @@ Sistema web desarrollado para la gestión de una pastelería, permitiendo la vis
 - Django
 - HTML
 - CSS
-- SQLite
 
-## ▶️ Ejecución del proyecto
-1. Clonar el repositorio
-2. Ejecutar:
-3. 
 ## 👩‍💻 Autor
 Nahomi Herrera Minor
